@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import '../models/registro_acceso.dart';
 
 class HistorialScreen extends StatelessWidget {
@@ -7,6 +8,16 @@ class HistorialScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (Firebase.apps.isEmpty) {
+      return Scaffold(
+        appBar: AppBar(title: const Text('Historial de accesos')),
+        body: const Center(
+          child: Text(
+            'Firebase no está configurado. Active Firestore para ver registros.',
+          ),
+        ),
+      );
+    }
     final coll = FirebaseFirestore.instance
         .collection('access_records')
         .orderBy('entrada', descending: true);
