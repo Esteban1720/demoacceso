@@ -16,13 +16,15 @@ class _RegistroScreenState extends State<RegistroScreen> {
   final TextEditingController _nombreCtrl = TextEditingController();
   final TextEditingController _codigoCtrl = TextEditingController();
   final ImagePicker _picker = ImagePicker();
-  File? _imagen;
+  File? _imagenFoto;
+  File? _imagenCarnet;
+  // Allow selecting image from gallery or camera as carnet
   bool _cargando = false;
 
   final FirestoreService _svc = FirestoreService();
   final CloudinaryService _cloudinary = CloudinaryService();
 
-  Future<void> _tomarFoto() async {
+  Future<void> _tomarFotoEstudiante() async {
     final foto = await _picker.pickImage(
       source: ImageSource.camera,
       imageQuality: 80,
@@ -30,17 +32,40 @@ class _RegistroScreenState extends State<RegistroScreen> {
     if (foto == null) {
       return;
     }
-    setState(() => _imagen = File(foto.path));
+    setState(() => _imagenFoto = File(foto.path));
+  }
+
+  Future<void> _seleccionarFotoEstudianteDesdeGaleria() async {
+    final foto = await _picker.pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 80,
+    );
+    if (foto == null) return;
+    setState(() => _imagenFoto = File(foto.path));
+  }
+
+  Future<void> _tomarFotoCarnet() async {
+    final foto = await _picker.pickImage(
+      source: ImageSource.camera,
+      imageQuality: 80,
+    );
+    if (foto == null) return;
+    setState(() => _imagenCarnet = File(foto.path));
+  }
+
+  Future<void> _seleccionarFotoCarnetDesdeGaleria() async {
+    final foto = await _picker.pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 80,
+    );
+    if (foto == null) return;
+    setState(() => _imagenCarnet = File(foto.path));
   }
 
   Future<void> _guardar() async {
-    if (_nombreCtrl.text.isEmpty ||
-        _codigoCtrl.text.isEmpty ||
-        _imagen == null) {
+    if (_nombreCtrl.text.isEmpty || _codigoCtrl.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Complete todos los campos y tome la foto del carnet'),
-        ),
+        const SnackBar(content: Text('Complete todos los campos obligatorios')),
       );
       return;
     }
@@ -48,15 +73,26 @@ class _RegistroScreenState extends State<RegistroScreen> {
     setState(() => _cargando = true);
     final id = const Uuid().v4();
     try {
-      final fotoUrl = await _cloudinary.subirImagenNoFirmada(
-        _imagen!,
-        folder: 'students',
-      );
+      String? fotoUrl;
+      String? fotoCarnetUrl;
+      if (_imagenFoto != null) {
+        fotoUrl = await _cloudinary.subirImagenNoFirmada(
+          _imagenFoto!,
+          folder: 'students',
+        );
+      }
+      if (_imagenCarnet != null) {
+        fotoCarnetUrl = await _cloudinary.subirImagenNoFirmada(
+          _imagenCarnet!,
+          folder: 'students/carnets',
+        );
+      }
       final est = Estudiante(
         id: id,
         nombreCompleto: _nombreCtrl.text,
         codigoCarnet: _codigoCtrl.text,
         fotoUrl: fotoUrl,
+        fotoCarnetUrl: fotoCarnetUrl,
         creadoEn: DateTime.now(),
       );
       await _svc.crearEstudiante(est);
@@ -96,13 +132,49 @@ class _RegistroScreenState extends State<RegistroScreen> {
                 ),
               ),
               const SizedBox(height: 10),
-              ElevatedButton.icon(
-                onPressed: _tomarFoto,
-                icon: const Icon(Icons.camera_alt),
-                label: const Text('Tomar foto del carnet'),
+              // Foto del estudiante (selfie)
+              const SizedBox(height: 6),
+              const Text('Foto del estudiante (opcional)'),
+              const SizedBox(height: 6),
+              Row(
+                children: [
+                  ElevatedButton.icon(
+                    onPressed: _tomarFotoEstudiante,
+                    icon: const Icon(Icons.camera_alt),
+                    label: const Text('Tomar foto'),
+                  ),
+                  const SizedBox(width: 8),
+                  ElevatedButton.icon(
+                    onPressed: _seleccionarFotoEstudianteDesdeGaleria,
+                    icon: const Icon(Icons.photo_library),
+                    label: const Text('Seleccionar'),
+                  ),
+                ],
               ),
-              const SizedBox(height: 10),
-              if (_imagen != null) Image.file(_imagen!, height: 180),
+              const SizedBox(height: 8),
+              if (_imagenFoto != null) Image.file(_imagenFoto!, height: 180),
+              const SizedBox(height: 16),
+              // Foto del carnet (ID)
+              const Text('Foto del carnet (opcional)'),
+              const SizedBox(height: 6),
+              Row(
+                children: [
+                  ElevatedButton.icon(
+                    onPressed: _tomarFotoCarnet,
+                    icon: const Icon(Icons.camera_alt),
+                    label: const Text('Tomar foto del carnet'),
+                  ),
+                  const SizedBox(width: 8),
+                  ElevatedButton.icon(
+                    onPressed: _seleccionarFotoCarnetDesdeGaleria,
+                    icon: const Icon(Icons.photo_library),
+                    label: const Text('Seleccionar carnet'),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              if (_imagenCarnet != null)
+                Image.file(_imagenCarnet!, height: 180),
               const SizedBox(height: 16),
               _cargando
                   ? const Center(child: CircularProgressIndicator())

@@ -5,6 +5,7 @@ class Estudiante {
   final String nombreCompleto;
   final String codigoCarnet;
   final String? fotoUrl;
+  final String? fotoCarnetUrl;
   final DateTime creadoEn;
 
   Estudiante({
@@ -12,6 +13,7 @@ class Estudiante {
     required this.nombreCompleto,
     required this.codigoCarnet,
     this.fotoUrl,
+    this.fotoCarnetUrl,
     required this.creadoEn,
   });
 
@@ -22,6 +24,7 @@ class Estudiante {
       nombreCompleto: d['nombreCompleto'] ?? '',
       codigoCarnet: d['codigoCarnet'] ?? '',
       fotoUrl: d['fotoUrl'],
+      fotoCarnetUrl: d['fotoCarnetUrl'],
       creadoEn: (d['creadoEn'] as Timestamp).toDate(),
     );
   }
@@ -30,6 +33,7 @@ class Estudiante {
     'nombreCompleto': nombreCompleto,
     'codigoCarnet': codigoCarnet,
     'fotoUrl': fotoUrl,
+    'fotoCarnetUrl': fotoCarnetUrl,
     'creadoEn': Timestamp.fromDate(creadoEn),
   };
 }
