@@ -1,39 +1,43 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Estudiante {
+class Usuario {
   final String id;
   final String nombreCompleto;
+  final String cedula;
   final String codigoCarnet;
-  final String? fotoUrl;
-  final String? fotoCarnetUrl;
+  final String programaAcademico;
+  final String tipoUsuario;
   final DateTime creadoEn;
 
-  Estudiante({
+  Usuario({
     required this.id,
     required this.nombreCompleto,
+    required this.cedula,
     required this.codigoCarnet,
-    this.fotoUrl,
-    this.fotoCarnetUrl,
+    required this.programaAcademico,
+    required this.tipoUsuario,
     required this.creadoEn,
   });
 
-  factory Estudiante.fromDoc(DocumentSnapshot doc) {
+  factory Usuario.fromDoc(DocumentSnapshot doc) {
     final d = doc.data() as Map<String, dynamic>;
-    return Estudiante(
+    return Usuario(
       id: doc.id,
       nombreCompleto: d['nombreCompleto'] ?? '',
+      cedula: d['cedula'] ?? '',
       codigoCarnet: d['codigoCarnet'] ?? '',
-      fotoUrl: d['fotoUrl'],
-      fotoCarnetUrl: d['fotoCarnetUrl'],
+      programaAcademico: d['programaAcademico'] ?? '',
+      tipoUsuario: d['tipodeusuario'] ?? d['tipoUsuario'] ?? 'Estudiante',
       creadoEn: (d['creadoEn'] as Timestamp).toDate(),
     );
   }
 
   Map<String, dynamic> toMap() => {
     'nombreCompleto': nombreCompleto,
+    'cedula': cedula,
     'codigoCarnet': codigoCarnet,
-    'fotoUrl': fotoUrl,
-    'fotoCarnetUrl': fotoCarnetUrl,
+    'programaAcademico': programaAcademico,
+    'tipodeusuario': tipoUsuario,
     'creadoEn': Timestamp.fromDate(creadoEn),
   };
 }

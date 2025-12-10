@@ -1,6 +1,6 @@
 # Control de Acceso - Universidad del Pacífico (Flutter + Firebase + Cloudinary)
 
-Proyecto de ejemplo para controlar entradas y salidas de estudiantes usando Flutter, Firestore y Cloudinary.
+Proyecto de ejemplo para controlar entradas y salidas de usuarios usando Flutter, Firestore y Cloudinary.
 
 Pasos rápidos para ejecutar:
 
@@ -18,14 +18,8 @@ flutter pub get
 flutter run
 ```
 
-Cloudinary:
-- Para probar sin backend, crea un `upload_preset` sin firma (unsigned) en Cloudinary y colócalo en `.env`.
-- Para producción, implementa una Cloud Function que devuelva el `signature` y usa `signed` uploads.
-
 Variables de entorno:
-- Crea un archivo `.env` en la raíz con las siguientes variables (ejemplo en `.env.example`):
-	- CLOUDINARY_CLOUD_NAME=df963uwem
-	- CLOUDINARY_UPLOAD_PRESET=mi_upload_preset_unauthorized
+- Crea un archivo `.env` en la raíz con las siguientes variables (ejemplo en `.env.example`) si tu app usa servicios externos para subir archivos.
 
 Android & iOS:
 - Asegúrate de que `google-services.json` (Android) y `GoogleService-Info.plist` (iOS) estén en los paths correctos.
@@ -37,11 +31,14 @@ Firestore:
 
 Permisos y configuración adicional:
 - Android: agrega permisos en `android/app/src/main/AndroidManifest.xml` si no están ya: `android.permission.CAMERA`, `android.permission.INTERNET`.
-- iOS: agrega en `ios/Runner/Info.plist` las keys `NSCameraUsageDescription` (texto para el usuario) y `NSPhotoLibraryAddUsageDescription`.
+- iOS: agrega en `ios/Runner/Info.plist` la key `NSCameraUsageDescription` (texto para el usuario). No es necesario `NSPhotoLibraryAddUsageDescription` ya que la app ya no guarda/selecciona fotos desde la galería.
 
-Cloudinary:
-- Crea un `upload_preset` unsigned en Cloudinary para pruebas. Es la forma más sencilla de subir desde la app sin exponer secret.
-- Para producción, usa Cloud Functions o tu backend para firmar uploads (signed uploads), de modo que no almacenes `api_secret` en el cliente.
+Registro:
+- La pantalla de registro ahora permite registrar:
+	- Nombre completo (obligatorio)
+	- Cédula (obligatorio)
+	- Código del carnet (barcode) (obligatorio)
+	- Programa académico (obligatorio)
 # demo
 
 A new Flutter project.

@@ -12,7 +12,7 @@ class CloudinaryService {
 
   Future<String> subirImagenNoFirmada(
     File file, {
-    String folder = 'students',
+    String folder = 'Usuario',
   }) async {
     final uri = Uri.parse(
       'https://api.cloudinary.com/v1_1/$cloudName/image/upload',

@@ -29,9 +29,7 @@
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
 	<key>NSCameraUsageDescription</key>
-	<string>La aplicación usa la cámara para capturar la foto del carnet estudiantil.</string>
-	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>La aplicación guarda temporalmente la foto del carnet para subirla a Cloudinary.</string>
+	<string>La aplicación usa la cámara para escanear el código de barras o QR del carnet.</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
