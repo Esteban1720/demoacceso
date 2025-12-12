@@ -229,10 +229,26 @@ class _HistorialScreenState extends State<HistorialScreen> {
                 )
                 .toList();
 
-            final tabs = [all, estudiantes, admins, visitantes, servicios];
+            final profesores = combined
+                .where(
+                  (e) =>
+                      isTipo(e['user'], 'profesor') ||
+                      isTipo(e['user'], 'docente') ||
+                      isTipo(e['user'], 'teacher'),
+                )
+                .toList();
+
+            final tabs = [
+              all,
+              estudiantes,
+              admins,
+              visitantes,
+              servicios,
+              profesores,
+            ];
 
             return DefaultTabController(
-              length: 5,
+              length: 6,
               child: Column(
                 children: [
                   Container(
@@ -254,13 +270,18 @@ class _HistorialScreenState extends State<HistorialScreen> {
                         Tab(text: 'Administradores (${admins.length})'),
                         Tab(text: 'Visitantes (${visitantes.length})'),
                         Tab(text: 'Servicio general (${servicios.length})'),
+                        Tab(text: 'Profesores (${profesores.length})'),
                       ],
                     ),
                   ),
                   const SizedBox(height: 8),
                   Expanded(
                     child: TabBarView(
-                      children: tabs.map((list) {
+                      children: List.generate(tabs.length, (tabIndex) {
+                        final list = tabs[tabIndex];
+                        final isVisitanteTab =
+                            tabIndex ==
+                            3; // index 3 -> visitantes (se mantiene)
                         if (list.isEmpty) {
                           return Center(
                             child: Container(
@@ -361,58 +382,54 @@ class _HistorialScreenState extends State<HistorialScreen> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Text(
-                                          'Entrada: $entradaStr',
-                                          style: const TextStyle(
-                                            color: Color.fromRGBO(
-                                              255,
-                                              255,
-                                              255,
-                                              0.9,
-                                            ),
-                                          ),
-                                        ),
-                                        Text(
-                                          'Salida: $salidaStr',
-                                          style: const TextStyle(
-                                            color: Color.fromRGBO(
-                                              255,
-                                              255,
-                                              255,
-                                              0.9,
-                                            ),
-                                          ),
-                                        ),
-                                        Text(
-                                          'Duración: $duracion',
-                                          style: const TextStyle(
-                                            color: Color.fromRGBO(
-                                              255,
-                                              255,
-                                              255,
-                                              0.9,
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(height: 6),
-                                        Text(
-                                          'Tipo: $tipo',
-                                          style: const TextStyle(
-                                            color: Color.fromRGBO(
-                                              255,
-                                              255,
-                                              255,
-                                              0.85,
-                                            ),
-                                            fontStyle: FontStyle.italic,
-                                          ),
-                                        ),
-                                        if (usuario != null &&
-                                            usuario.tipoUsuario
-                                                .toLowerCase()
-                                                .contains('estudiante'))
+                                        if (isVisitanteTab) ...[
                                           Text(
-                                            'Programa: ${usuario.programaAcademico}',
+                                            'Cédula: ${usuario?.cedula ?? '-'}',
+                                            style: const TextStyle(
+                                              color: Color.fromRGBO(
+                                                255,
+                                                255,
+                                                255,
+                                                0.9,
+                                              ),
+                                            ),
+                                          ),
+                                          Text(
+                                            'Entrada: $entradaStr',
+                                            style: const TextStyle(
+                                              color: Color.fromRGBO(
+                                                255,
+                                                255,
+                                                255,
+                                                0.9,
+                                              ),
+                                            ),
+                                          ),
+                                          Text(
+                                            'Salida: $salidaStr',
+                                            style: const TextStyle(
+                                              color: Color.fromRGBO(
+                                                255,
+                                                255,
+                                                255,
+                                                0.9,
+                                              ),
+                                            ),
+                                          ),
+                                          Text(
+                                            'Duración: $duracion',
+                                            style: const TextStyle(
+                                              color: Color.fromRGBO(
+                                                255,
+                                                255,
+                                                255,
+                                                0.9,
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(height: 6),
+                                          Text(
+                                            'Tipo: $tipo',
                                             style: const TextStyle(
                                               color: Color.fromRGBO(
                                                 255,
@@ -420,32 +437,102 @@ class _HistorialScreenState extends State<HistorialScreen> {
                                                 255,
                                                 0.85,
                                               ),
+                                              fontStyle: FontStyle.italic,
                                             ),
                                           ),
+                                        ] else ...[
+                                          Text(
+                                            'Entrada: $entradaStr',
+                                            style: const TextStyle(
+                                              color: Color.fromRGBO(
+                                                255,
+                                                255,
+                                                255,
+                                                0.9,
+                                              ),
+                                            ),
+                                          ),
+                                          Text(
+                                            'Salida: $salidaStr',
+                                            style: const TextStyle(
+                                              color: Color.fromRGBO(
+                                                255,
+                                                255,
+                                                255,
+                                                0.9,
+                                              ),
+                                            ),
+                                          ),
+                                          Text(
+                                            'Duración: $duracion',
+                                            style: const TextStyle(
+                                              color: Color.fromRGBO(
+                                                255,
+                                                255,
+                                                255,
+                                                0.9,
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(height: 6),
+                                          Text(
+                                            'Tipo: $tipo',
+                                            style: const TextStyle(
+                                              color: Color.fromRGBO(
+                                                255,
+                                                255,
+                                                255,
+                                                0.85,
+                                              ),
+                                              fontStyle: FontStyle.italic,
+                                            ),
+                                          ),
+                                          if (usuario != null &&
+                                              usuario.tipoUsuario
+                                                  .toLowerCase()
+                                                  .contains('estudiante'))
+                                            Text(
+                                              'Programa: ${usuario.programaAcademico}',
+                                              style: const TextStyle(
+                                                color: Color.fromRGBO(
+                                                  255,
+                                                  255,
+                                                  255,
+                                                  0.85,
+                                                ),
+                                              ),
+                                            ),
+                                        ],
                                       ],
                                     ),
                                   ),
-                                  trailing: IconButton(
-                                    icon: Icon(
-                                      Icons.more_vert,
-                                      color: const Color.fromRGBO(
-                                        255,
-                                        255,
-                                        255,
-                                        0.9,
-                                      ),
-                                    ),
-                                    onPressed: () =>
-                                        _showRegistroDetails(reg, usuario),
-                                  ),
-                                  onTap: () =>
-                                      _showRegistroDetails(reg, usuario),
+                                  trailing: isVisitanteTab
+                                      ? null
+                                      : IconButton(
+                                          icon: Icon(
+                                            Icons.more_vert,
+                                            color: const Color.fromRGBO(
+                                              255,
+                                              255,
+                                              255,
+                                              0.9,
+                                            ),
+                                          ),
+                                          onPressed: () => _showRegistroDetails(
+                                            reg,
+                                            usuario,
+                                          ),
+                                        ),
+                                  onTap: isVisitanteTab
+                                      ? null
+                                      : () =>
+                                            _showRegistroDetails(reg, usuario),
                                 ),
                               ),
                             );
                           },
                         );
-                      }).toList(),
+                      }),
                     ),
                   ),
                   // overlay de borrado en progreso

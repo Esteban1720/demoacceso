@@ -29,11 +29,7 @@ class AppLogo extends StatelessWidget {
                 colors: [Color(0xFF0FBF60), Color(0xFF1976D2)],
               ),
               boxShadow: [
-                BoxShadow(
-                  color: const Color.fromRGBO(0, 0, 0, 0.18),
-                  blurRadius: 8,
-                  offset: const Offset(0, 4),
-                ),
+                BoxShadow(color: const Color.fromRGBO(0, 0, 0, 0.18), blurRadius: 8, offset: const Offset(0, 4)),
               ],
             ),
           ),
@@ -42,10 +38,7 @@ class AppLogo extends StatelessWidget {
           Container(
             width: inner,
             height: inner,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.white.withOpacity(0.06),
-            ),
+            decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white.withOpacity(0.06)),
           ),
 
           // contenido: candado + texto
@@ -56,15 +49,8 @@ class AppLogo extends StatelessWidget {
               Container(
                 width: inner * 0.6,
                 height: inner * 0.6,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white,
-                ),
-                child: Icon(
-                  Icons.lock,
-                  color: const Color(0xFF1976D2),
-                  size: inner * 0.36,
-                ),
+                decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+                child: Icon(Icons.lock, color: const Color(0xFF1976D2), size: inner * 0.36),
               ),
               const SizedBox(height: 6),
               Text(

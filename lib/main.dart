@@ -33,9 +33,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Control de Acceso - Universidad del Pacífico',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-      ),
+      theme: ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue)),
       initialRoute: '/',
       routes: {
         '/': (context) => const HomeScreen(),
@@ -45,9 +43,7 @@ class MyApp extends StatelessWidget {
       onGenerateRoute: (settings) {
         if (settings.name == '/escanear') {
           final args = settings.arguments as ScanModo?;
-          return MaterialPageRoute(
-            builder: (_) => ScanScreen(modo: args ?? ScanModo.entrada),
-          );
+          return MaterialPageRoute(builder: (_) => ScanScreen(modo: args ?? ScanModo.entrada));
         }
         return null;
       },

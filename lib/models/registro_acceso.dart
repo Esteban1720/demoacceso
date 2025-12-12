@@ -6,12 +6,7 @@ class RegistroAcceso {
   final DateTime entrada;
   final DateTime? salida;
 
-  RegistroAcceso({
-    required this.id,
-    required this.usuarioId,
-    required this.entrada,
-    this.salida,
-  });
+  RegistroAcceso({required this.id, required this.usuarioId, required this.entrada, this.salida});
 
   factory RegistroAcceso.fromDoc(DocumentSnapshot doc) {
     final d = doc.data() as Map<String, dynamic>;

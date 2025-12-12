@@ -5,12 +5,7 @@ class BotonGrande extends StatelessWidget {
   final Color color;
   final VoidCallback onPressed;
 
-  const BotonGrande({
-    super.key,
-    required this.label,
-    required this.color,
-    required this.onPressed,
-  });
+  const BotonGrande({super.key, required this.label, required this.color, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -20,15 +15,10 @@ class BotonGrande extends StatelessWidget {
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           backgroundColor: color,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         ),
         onPressed: onPressed,
-        child: Text(
-          label,
-          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-        ),
+        child: Text(label, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
       ),
     );
   }

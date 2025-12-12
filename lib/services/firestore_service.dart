@@ -18,37 +18,21 @@ class FirestoreService {
     final digits = raw.replaceAll(RegExp(r'\D'), '');
 
     // 1) Normalizado
-    var snap = await _db
-        .collection('Usuario')
-        .where('codigoCarnetNormalized', isEqualTo: normalized)
-        .limit(1)
-        .get();
+    var snap = await _db.collection('Usuario').where('codigoCarnetNormalized', isEqualTo: normalized).limit(1).get();
     if (snap.docs.isNotEmpty) return Usuario.fromDoc(snap.docs.first);
 
     // 2) Exacto
-    snap = await _db
-        .collection('Usuario')
-        .where('codigoCarnet', isEqualTo: raw)
-        .limit(1)
-        .get();
+    snap = await _db.collection('Usuario').where('codigoCarnet', isEqualTo: raw).limit(1).get();
     if (snap.docs.isNotEmpty) return Usuario.fromDoc(snap.docs.first);
 
     // 3) Solo dígitos
     if (digits.isNotEmpty) {
       // si guardaste codigoCarnetDigits
-      snap = await _db
-          .collection('Usuario')
-          .where('codigoCarnetDigits', isEqualTo: digits)
-          .limit(1)
-          .get();
+      snap = await _db.collection('Usuario').where('codigoCarnetDigits', isEqualTo: digits).limit(1).get();
       if (snap.docs.isNotEmpty) return Usuario.fromDoc(snap.docs.first);
 
       // compatibilidad si solo está en codigoCarnet
-      snap = await _db
-          .collection('Usuario')
-          .where('codigoCarnet', isEqualTo: digits)
-          .limit(1)
-          .get();
+      snap = await _db.collection('Usuario').where('codigoCarnet', isEqualTo: digits).limit(1).get();
       if (snap.docs.isNotEmpty) return Usuario.fromDoc(snap.docs.first);
     }
     return null;
@@ -69,26 +53,17 @@ class FirestoreService {
   Future<void> crearUsuario(Usuario e) async {
     final data = e.toMap();
     data['codigoCarnetNormalized'] = e.codigoCarnet.trim().toLowerCase();
-    data['codigoCarnetDigits'] = e.codigoCarnet.trim().replaceAll(
-      RegExp(r'\D'),
-      '',
-    );
+    data['codigoCarnetDigits'] = e.codigoCarnet.trim().replaceAll(RegExp(r'\D'), '');
     await _db.collection('Usuario').doc(e.id).set(data);
   }
 
   Future<void> crearEntrada(String usuarioDocId) async {
     final docRef = _db.collection('accesos').doc();
-    await docRef.set({
-      'usuarioId': usuarioDocId,
-      'entrada': Timestamp.fromDate(DateTime.now()),
-      'salida': null,
-    });
+    await docRef.set({'usuarioId': usuarioDocId, 'entrada': Timestamp.fromDate(DateTime.now()), 'salida': null});
   }
 
   /// Obtiene la última entrada activa (sin salida) — independiente de la fecha.
-  Future<RegistroAcceso?> obtenerUltimaEntradaActiva(
-    String usuarioDocId,
-  ) async {
+  Future<RegistroAcceso?> obtenerUltimaEntradaActiva(String usuarioDocId) async {
     final q = await _db
         .collection('accesos')
         .where('usuarioId', isEqualTo: usuarioDocId)
@@ -110,10 +85,7 @@ class FirestoreService {
         .collection('accesos')
         .where('usuarioId', isEqualTo: usuarioDocId)
         .where('salida', isNull: true)
-        .where(
-          'entrada',
-          isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay),
-        )
+        .where('entrada', isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay))
         .where('entrada', isLessThan: Timestamp.fromDate(startOfNextDay))
         .orderBy('entrada', descending: true)
         .limit(1)
@@ -121,6 +93,28 @@ class FirestoreService {
 
     if (q.docs.isEmpty) return null;
     return RegistroAcceso.fromDoc(q.docs.first);
+  }
+
+  /// NUEVO: Obtiene la PRIMERA (más antigua) entrada activa para un usuario tipo Visitante.
+  /// Busca accesos sin salida ordenados por entrada ascendente y devuelve el primero
+  /// cuyo usuario tenga `tipoUsuario == 'Visitante'`.
+  Future<RegistroAcceso?> obtenerPrimerEntradaActivaVisitante({int limit = 100}) async {
+    final q = await _db
+        .collection('accesos')
+        .where('salida', isNull: true)
+        .orderBy('entrada', descending: false)
+        .limit(limit)
+        .get();
+
+    if (q.docs.isEmpty) return null;
+    for (final doc in q.docs) {
+      final reg = RegistroAcceso.fromDoc(doc);
+      final user = await obtenerUsuarioPorId(reg.usuarioId);
+      if (user != null && user.tipoUsuario.toLowerCase() == 'visitante') {
+        return reg;
+      }
+    }
+    return null;
   }
 
   /// Registra la salida en el registro cuyo ID se pasa (actualiza campo 'salida').

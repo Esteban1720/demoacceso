@@ -14,37 +14,26 @@ class HomeScreen extends StatelessWidget {
       // Para que el gradiente llegue detrás del AppBar
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        backgroundColor: Colors
-            .transparent, // AppBar transparente para mostrar el gradiente de fondo
+        backgroundColor: Colors.transparent, // AppBar transparente para mostrar el gradiente de fondo
         elevation: 0,
-        title: const Text(
-          'Control de Acceso',
-          style: TextStyle(fontWeight: FontWeight.w600),
-        ),
+        title: const Text('Control de Acceso', style: TextStyle(fontWeight: FontWeight.w600)),
         actions: [
           // Botón pequeño en la esquina superior derecha para registrar
           Padding(
             padding: const EdgeInsets.only(right: 12.0, top: 6.0),
             child: TextButton.icon(
               style: TextButton.styleFrom(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 6,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                 minimumSize: const Size(0, 0),
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                 backgroundColor: const Color.fromRGBO(255, 255, 255, 0.15),
                 foregroundColor: Colors.white,
               ),
               icon: const Icon(Icons.person_add, size: 18),
               label: const Text('', style: TextStyle(fontSize: 13)),
               onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => const RegistroScreen()),
-                );
+                Navigator.of(context).push(MaterialPageRoute(builder: (_) => const RegistroScreen()));
               },
             ),
           ),
@@ -88,9 +77,7 @@ class HomeScreen extends StatelessWidget {
                           offset: const Offset(0, 6),
                         ),
                       ],
-                      border: Border.all(
-                        color: const Color.fromRGBO(255, 255, 255, 0.10),
-                      ),
+                      border: Border.all(color: const Color.fromRGBO(255, 255, 255, 0.10)),
                     ),
                     child: Column(
                       children: [
@@ -99,11 +86,7 @@ class HomeScreen extends StatelessWidget {
                           padding: EdgeInsets.symmetric(vertical: 8.0),
                           child: Text(
                             'Selecciona el modo',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600,
-                            ),
+                            style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w600),
                           ),
                         ),
                         const SizedBox(height: 12),
@@ -112,12 +95,9 @@ class HomeScreen extends StatelessWidget {
                           label: 'Entrada',
                           color: Colors.green.shade600,
                           onPressed: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (_) =>
-                                    const ScanScreen(modo: ScanModo.entrada),
-                              ),
-                            );
+                            Navigator.of(
+                              context,
+                            ).push(MaterialPageRoute(builder: (_) => const ScanScreen(modo: ScanModo.entrada)));
                           },
                         ),
                         const SizedBox(height: 14),
@@ -125,12 +105,9 @@ class HomeScreen extends StatelessWidget {
                           label: 'Salida',
                           color: Colors.blue.shade700,
                           onPressed: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (_) =>
-                                    const ScanScreen(modo: ScanModo.salida),
-                              ),
-                            );
+                            Navigator.of(
+                              context,
+                            ).push(MaterialPageRoute(builder: (_) => const ScanScreen(modo: ScanModo.salida)));
                           },
                         ),
                         const SizedBox(height: 18),
@@ -140,26 +117,13 @@ class HomeScreen extends StatelessWidget {
                           child: OutlinedButton(
                             style: OutlinedButton.styleFrom(
                               padding: const EdgeInsets.symmetric(vertical: 12),
-                              side: const BorderSide(
-                                color: Color.fromRGBO(255, 255, 255, 0.18),
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              backgroundColor: const Color.fromRGBO(
-                                255,
-                                255,
-                                255,
-                                0.03,
-                              ),
+                              side: const BorderSide(color: Color.fromRGBO(255, 255, 255, 0.18)),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                              backgroundColor: const Color.fromRGBO(255, 255, 255, 0.03),
                               foregroundColor: Colors.white,
                             ),
                             onPressed: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (_) => const HistorialScreen(),
-                                ),
-                              );
+                              Navigator.of(context).push(MaterialPageRoute(builder: (_) => const HistorialScreen()));
                             },
                             child: const Text('Ver historial'),
                           ),

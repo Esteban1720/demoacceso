@@ -21,11 +21,12 @@ class _RegistroScreenState extends State<RegistroScreen> {
   final FirestoreService _svc = FirestoreService();
 
   Future<void> _guardar() async {
-    final necesitaPrograma =
-        _tipoUsuario == 'Estudiante' || _tipoUsuario == 'Profesor';
+    // Programa académico solo necesario para Estudiantes. No obligatorio para Profesores.
+    final necesitaPrograma = _tipoUsuario == 'Estudiante';
+    final necesitaCodigo = _tipoUsuario.toLowerCase() != 'visitante';
 
     if (_nombreCtrl.text.isEmpty ||
-        _codigoCtrl.text.isEmpty ||
+        (necesitaCodigo && _codigoCtrl.text.isEmpty) ||
         _cedulaCtrl.text.isEmpty ||
         (necesitaPrograma && _programaCtrl.text.isEmpty)) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -180,22 +181,22 @@ class _RegistroScreenState extends State<RegistroScreen> {
                       keyboardType: TextInputType.number,
                     ),
                     const SizedBox(height: 12),
-                    TextField(
-                      controller: _codigoCtrl,
-                      style: const TextStyle(color: Colors.white),
-                      decoration: _inputDecoration(
-                        'Código del carnet (barcode)',
-                        suffix: IconButton(
-                          icon: const Icon(Icons.qr_code_scanner),
-                          color: Colors.white,
-                          onPressed: _scanCodigo,
-                          tooltip: 'Escanear código',
+                    if (_tipoUsuario.toLowerCase() != 'visitante')
+                      TextField(
+                        controller: _codigoCtrl,
+                        style: const TextStyle(color: Colors.white),
+                        decoration: _inputDecoration(
+                          'Código del carnet (barcode)',
+                          suffix: IconButton(
+                            icon: const Icon(Icons.qr_code_scanner),
+                            color: Colors.white,
+                            onPressed: _scanCodigo,
+                            tooltip: 'Escanear código',
+                          ),
                         ),
                       ),
-                    ),
                     const SizedBox(height: 12),
-                    if (_tipoUsuario == 'Estudiante' ||
-                        _tipoUsuario == 'Profesor')
+                    if (_tipoUsuario == 'Estudiante')
                       TextField(
                         controller: _programaCtrl,
                         style: const TextStyle(color: Colors.white),
@@ -223,17 +224,21 @@ class _RegistroScreenState extends State<RegistroScreen> {
                           child: Text('Administrador'),
                         ),
                         DropdownMenuItem(
-                          value: 'Visitante',
-                          child: Text('Visitante'),
-                        ),
-                        DropdownMenuItem(
                           value: 'serviciogeneral',
                           child: Text('Servicio general'),
                         ),
                       ],
                       onChanged: (v) {
                         if (v == null) return;
-                        setState(() => _tipoUsuario = v);
+                        setState(() {
+                          _tipoUsuario = v;
+                          // Nota: la opción 'Visitante' fue removida del formulario; ya no limpiamos el código aquí.
+                          // Si el tipo es Profesor, limpiar programa académico para evitar valores residuales
+                          if (_tipoUsuario.toLowerCase() == 'profesor' ||
+                              _tipoUsuario == 'Profesor') {
+                            _programaCtrl.clear();
+                          }
+                        });
                       },
                     ),
                     _cargando
