@@ -159,8 +159,8 @@ Si deseas contribuir:
 
 ## 📄 Licencia y contacto
 
-Esteban David Ruiz Caicedo
-correo:dr0238335@gmail.com
-contacto:3207012503
+-Esteban David Ruiz Caicedo
+-correo:dr0238335@gmail.com
+-contacto:3207012503
 
 
