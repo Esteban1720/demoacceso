@@ -1,57 +1,167 @@
-# Control de Acceso - Universidad del Pacífico (Flutter + Firebase + Cloudinary)
+# Control de Acceso - Universidad del Pacífico ✅
 
-Proyecto de ejemplo para controlar entradas y salidas de usuarios usando Flutter, Firestore y Cloudinary.
+**App de control de accesos para campus universitario**
 
-Pasos rápidos para ejecutar:
+Una aplicación Flutter que permite registrar usuarios, identificar personas mediante el escaneo del código del carnet (QR/barcode) y registrar entradas y salidas (accesos) en Firestore.
 
-1. Coloca `google-services.json` en `android/app/` y `GoogleService-Info.plist` en `ios/Runner/`.
-2. Crea un archivo `.env` en la raíz (no lo comitees) con las variables necesarias. Usa `.env.example` como guía.
-3. Instala dependencias:
+---
+
+## 📋 Tabla de contenido
+
+- [Descripción](#descripción)
+- [Funcionalidades](#funcionalidades)
+- [Tecnologías utilizadas](#tecnologías-utilizadas)
+- [Estructura clave del proyecto](#estructura-clave-del-proyecto)
+- [Instalación y configuración](#instalación-y-configuración)
+- [Variables de entorno](#variables-de-entorno)
+- [Ejecución y pruebas](#ejecución-y-pruebas)
+- [Notas de despliegue y seguridad](#notas-de-despliegue-y-seguridad)
+- [Contribuciones](#contribuciones)
+
+---
+
+## 🔎 Descripción
+
+La aplicación permite gestionar el acceso a instalaciones:
+- Registrar usuarios (Estudiante, Profesor, Administrador, Servicio general).
+- Identificar usuarios mediante el escaneo del código del carnet (barcode/QR).
+- Registrar entradas y salidas y consultar el historial de accesos.
+- Arquitectura orientada a Flutter + Firebase Firestore como backend.
+
+> La app incluye puntos para soportar subida de imágenes a servicios externos si se configuran variables de entorno, pero **el README no entra en detalle de servicios específicos**.
+
+---
+
+## ✨ Funcionalidades principales
+
+- Registro de usuarios con validaciones por tipo (Estudiante, Profesor, etc.).
+- Escaneo de códigos con cámara (soporte por `barcode_scan2` / `mobile_scanner`).
+- Registro de accesos: crear entrada, registrar salida, consultar historial.
+- Interacciones con Firestore a través de `lib/services/firestore_service.dart`.
+- Tests de widgets para pantallas clave (ej. `RegistroScreen`).
+
+---
+
+## 🧰 Tecnologías utilizadas
+
+Basado en `pubspec.yaml` — versiones actuales (ejemplos):
+
+- Flutter SDK: ^3.9.2
+- firebase_core: ^2.10.0
+- cloud_firestore: ^4.5.0
+- barcode_scan2: ^4.2.0
+- mobile_scanner: ^4.0.0
+- image_picker: ^1.1.0
+- http: ^1.1.0
+- flutter_riverpod: ^2.1.0
+- flutter_dotenv: ^5.0.2
+- uuid: ^4.2.0
+- cupertino_icons: ^1.0.8
+
+Dev dependencies:
+- flutter_test
+- flutter_lints: ^5.0.0
+- flutter_launcher_icons: ^0.10.0
+
+Plataformas soportadas: Android, iOS, Web, Windows, macOS, Linux.
+
+---
+
+## 🗂️ Estructura clave del proyecto
+
+- `lib/main.dart` — Inicialización (dotenv, Firebase) y rutas.
+- `lib/services/firestore_service.dart` — Acceso a Firestore (colecciones: `Usuario`, `accesos`).
+- `lib/services/cloudinary_service.dart` — Ejemplo de servicio de subida HTTP desde `.env` (opcional).
+- `lib/screens/registro_screen.dart` — Formulario de registro y lógica de UI.
+- `lib/screens/scan_screen.dart`, `historial_screen.dart` — Escaneo y historial.
+- `test/` — Tests de widgets (`registro_screen_test.dart`).
+
+---
+
+## ⚙️ Instalación y configuración
+
+Requisitos:
+- Flutter compatible (ver `environment` en `pubspec.yaml`).
+- Tener configurado Firebase para Android/iOS (archivos de configuración).
+
+Pasos:
+1. Clona el repositorio.
+2. Copia los archivos de configuración de Firebase:
+   - `android/app/google-services.json`
+   - `ios/Runner/GoogleService-Info.plist`
+3. Crea un archivo `.env` en la raíz (no subirlo al repo). Ver sección de variables de entorno.
+4. Instala dependencias:
 
 ```bash
 flutter pub get
 ```
 
-4. Ejecuta la app:
+5. Ejecuta la app en un emulador o dispositivo:
 
 ```bash
 flutter run
 ```
 
-Variables de entorno:
-- Crea un archivo `.env` en la raíz con las siguientes variables (ejemplo en `.env.example`) si tu app usa servicios externos para subir archivos.
+---
 
-Android & iOS:
-- Asegúrate de que `google-services.json` (Android) y `GoogleService-Info.plist` (iOS) estén en los paths correctos.
-- Para Android, en `android/` configura `minSdk >= 21` si usas paquetes que lo requieren.
-- En iOS, añade `NSCameraUsageDescription` en `Info.plist`.
+## 🔑 Variables de entorno
 
-Firestore:
-- Para prototipo, puedes dejar reglas abiertas, pero para producción configura reglas que limiten solo personal autorizado a escribir.
+Ejemplo de variables que pueden aparecer en `.env` (el proyecto incluye un `.env` de ejemplo en desarrollo):
 
-Permisos y configuración adicional:
-- Android: agrega permisos en `android/app/src/main/AndroidManifest.xml` si no están ya: `android.permission.CAMERA`, `android.permission.INTERNET`.
-- iOS: agrega en `ios/Runner/Info.plist` la key `NSCameraUsageDescription` (texto para el usuario). No es necesario `NSPhotoLibraryAddUsageDescription` ya que la app ya no guarda/selecciona fotos desde la galería.
+- `FIREBASE_API_KEY`
+- `FIREBASE_APP_ID`
+- `FIREBASE_MESSAGING_SENDER_ID`
+- `FIREBASE_PROJECT_ID`
+- (Opcional) `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_UPLOAD_PRESET` — solo si se utiliza un servicio externo para subir imágenes
 
-Registro:
-- La pantalla de registro ahora permite registrar:
-	- Nombre completo (obligatorio)
-	- Cédula (obligatorio)
-	- Código del carnet (barcode) (obligatorio)
-	- Programa académico (obligatorio)
-# demo
+> Asegúrate de **no** subir el `.env` ni secretos al control de versiones. Usa variables de entorno en CI/CD para producción.
 
-A new Flutter project.
+---
 
-## Getting Started
+## ▶️ Ejecución y pruebas
 
-This project is a starting point for a Flutter application.
+- Ejecutar la app:
 
-A few resources to get you started if this is your first Flutter project:
+```bash
+flutter run
+```
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- Construir APK (Android):
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```bash
+flutter build apk --release
+```
+
+- Ejecutar tests:
+
+```bash
+flutter test
+```
+
+---
+
+## 🔒 Notas de seguridad y despliegue
+
+- En desarrollo las reglas de Firestore pueden ser más permisivas; **en producción** aplica reglas estrictas que limiten lectura/escritura.
+- No comites claves privadas ni `.env` al repositorio.
+- Revisa `minSdkVersion` en Android si alguna dependencia lo requiere.
+
+---
+
+## 🤝 Contribuciones
+
+Si deseas contribuir:
+1. Crea una rama feature (`git checkout -b feat/mi-cambio`).
+2. Haz commits claros.
+3. Abre un Merge Request / Pull Request describiendo el cambio.
+
+---
+
+## 📄 Licencia y contacto
+
+Incluye una licencia en el repo si es necesario y/o datos de contacto del mantenedor.
+
+---
+
+¿Quieres que guarde esta versión como `README.md` (sobrescribir) o además cree un `README_COMPLETO.md` con más detalle técnico (diagramas, ejemplos de reglas de Firestore)?
+
