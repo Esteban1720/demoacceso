@@ -1,4 +1,4 @@
-# Control de Acceso - Universidad del Pacífico ✅
+# Control de Acceso - Universidad del Pacífico 
 
 **App de control de accesos para campus universitario**
 
