@@ -159,9 +159,8 @@ Si deseas contribuir:
 
 ## 📄 Licencia y contacto
 
-Incluye una licencia en el repo si es necesario y/o datos de contacto del mantenedor.
+Esteban David Ruiz Caicedo
+correo:dr0238335@gmail.com
+contacto:3207012503
 
----
-
-¿Quieres que guarde esta versión como `README.md` (sobrescribir) o además cree un `README_COMPLETO.md` con más detalle técnico (diagramas, ejemplos de reglas de Firestore)?
 
